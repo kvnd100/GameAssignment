@@ -5,16 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="script/game.js"></script>
+    <script src="script/game.js" defer></script>
     <link href="css/game.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <a href="#">Main Menu</a>
-    <h1>You lose</h1>
+    <header class="header">
+        <h2>Time: <span class="header__timer">2:00</span></h2>
+    </header>
 
-
-    <div class="map"><canvas id="game" width="400" height="400"></canvas></div>
     
+    <div class="map"><canvas id="game" width="400" height="400"></canvas></div>
+    <div id="test" class="modal hidden">
+        <div class="modal__box">
+
+            <img src="/images/question1.png" alt="Questions" class="modal__img">
+            
+            <button class="close-modal--1">110</button>
+            <button class="close-modal--2">101</button>
+            <button class="close-modal--3">100</button>
+            <button class="close-modal--4">111</button>
+        </div>
+    </div>
+    <div class="overlay hidden"></div>
 
 </body>
 </html>

@@ -1,223 +1,5 @@
 // 'use strict';
-// var ctx = null;
 
-// const gameMap = [
-//   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 0, 0, 0, 0,
-//   0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1,
-//   0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-//   0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-// ];
-
-// var tileW = 40,
-//   tileH = 40;
-// var mapW = 10,
-//   mapH = 10;
-// var currentSecond = 0,
-//   frameCount = 0,
-//   framesLastSecond = 0,
-//   lastFrameTime = 0;
-
-// const floorTypes = {
-//   solid: 0,
-//   path: 1,
-//   question: 2,
-// };
-
-// var tileEvents = {
-//   11: drawBridge,
-//   12: drawBridge,
-//   17: drawBridge,
-//   121: function (c) {
-//     c.placeAt(1, 8);
-//   },
-//   161: function (c) {
-//     c.placeAt(1, 6);
-//   },
-// };
-
-// function drawBridge() {
-//   console.log('Hello');
-// }
-
-// var tileTypes = {
-//   0: { colour: '#E9A505', floor: floorTypes.solid },
-//   1: { colour: '#e06817', floor: floorTypes.path },
-//   2: { colour: '#777', floor: floorTypes.question },
-// };
-
-// var keysDown = {
-//   37: false,
-//   38: false,
-//   39: false,
-//   40: false,
-// };
-
-// var player = new Character();
-
-// function Character() {
-//   this.tileFrom = [0, 4];
-//   this.tileTo = [0, 4];
-//   this.timeMoved = 0;
-//   this.dimensions = [30, 30];
-//   this.position = [5, 165];
-//   this.delayMove = 700;
-// }
-
-// Character.prototype.placeAt = function (x, y) {
-//   this.tileFrom = [x, y];
-//   this.tileTo = [x, y];
-//   this.position = [
-//     tileW * x + (tileW - this.dimensions[0]) / 2,
-//     tileH * y + (tileH - this.dimensions[1]) / 2,
-//   ];
-// };
-// Character.prototype.processMovement = function (t) {
-//   if (
-//     this.tileFrom[0] == this.tileTo[0] &&
-//     this.tileFrom[1] == this.tileTo[1]
-//   ) {
-//     return false;
-//   }
-
-//   if (t - this.timeMoved >= this.delayMove) {
-//     this.placeAt(this.tileTo[0], this.tileTo[1]);
-//   } else {
-//     this.position[0] =
-//       this.tileFrom[0] * tileW + (tileW - this.dimensions[0]) / 2;
-//     this.position[1] =
-//       this.tileFrom[1] * tileH + (tileH - this.dimensions[1]) / 2;
-
-//     if (this.tileTo[0] != this.tileFrom[0]) {
-//       var diff = (tileW / this.delayMove) * (t - this.timeMoved);
-//       this.position[0] += this.tileTo[0] < this.tileFrom[0] ? 0 - diff : diff;
-//     }
-//     if (this.tileTo[1] != this.tileFrom[1]) {
-//       var diff = (tileH / this.delayMove) * (t - this.timeMoved);
-//       this.position[1] += this.tileTo[1] < this.tileFrom[1] ? 0 - diff : diff;
-//     }
-
-//     this.position[0] = Math.round(this.position[0]);
-//     this.position[1] = Math.round(this.position[1]);
-//   }
-
-//   return true;
-// };
-
-// Character.prototype.canMoveTo = function (x, y) {
-//   if (x < 0 || x >= mapW || y < 0 || y >= mapH) {
-//     return false;
-//   }
-//   if (
-//     tileTypes[gameMap[toIndex(x, y)]].floor != floorTypes.path &&
-//     tileTypes[gameMap[toIndex(x, y)]].floor != floorTypes.question
-//   ) {
-//     return false;
-//   }
-//   return true;
-// };
-
-// Character.prototype.canMoveUp = function () {
-//   return this.canMoveTo(this.tileFrom[0], this.tileFrom[1] - 1);
-// };
-// Character.prototype.canMoveDown = function () {
-//   return this.canMoveTo(this.tileFrom[0], this.tileFrom[1] + 1);
-// };
-// Character.prototype.canMoveLeft = function () {
-//   return this.canMoveTo(this.tileFrom[0] - 1, this.tileFrom[1]);
-// };
-// Character.prototype.canMoveRight = function () {
-//   return this.canMoveTo(this.tileFrom[0] + 1, this.tileFrom[1]);
-// };
-
-// Character.prototype.moveLeft = function (t) {
-//   this.tileTo[0] -= 1;
-//   this.timeMoved = t;
-// };
-// Character.prototype.moveRight = function (t) {
-//   this.tileTo[0] += 1;
-//   this.timeMoved = t;
-// };
-// Character.prototype.moveUp = function (t) {
-//   this.tileTo[1] -= 1;
-//   this.timeMoved = t;
-// };
-// Character.prototype.moveDown = function (t) {
-//   this.tileTo[1] += 1;
-//   this.timeMoved = t;
-// };
-
-// function toIndex(x, y) {
-//   return y * mapW + x;
-// }
-
-// window.onload = function () {
-//   ctx = document.getElementById('game').getContext('2d');
-//   requestAnimationFrame(drawGame);
-//   ctx.font = 'bold 10pt sans-serif';
-
-//   window.addEventListener('keydown', function (e) {
-//     if (e.keyCode >= 37 && e.keyCode <= 40) {
-//       keysDown[e.keyCode] = true;
-//     }
-//   });
-//   window.addEventListener('keyup', function (e) {
-//     if (e.keyCode >= 37 && e.keyCode <= 40) {
-//       keysDown[e.keyCode] = false;
-//     }
-//   });
-// };
-
-// function drawGame() {
-//   if (ctx == null) {
-//     return;
-//   }
-
-//   var currentFrameTime = Date.now();
-//   var timeElapsed = currentFrameTime - lastFrameTime;
-
-//   var sec = Math.floor(Date.now() / 1000);
-//   if (sec != currentSecond) {
-//     currentSecond = sec;
-//     framesLastSecond = frameCount;
-//     frameCount = 1;
-//   } else {
-//     frameCount++;
-//   }
-
-//   if (!player.processMovement(currentFrameTime)) {
-//     if (keysDown[38] && player.canMoveUp()) {
-//       player.moveUp(currentFrameTime);
-//     } else if (keysDown[40] && player.canMoveDown()) {
-//       player.moveDown(currentFrameTime);
-//     } else if (keysDown[37] && player.canMoveLeft()) {
-//       player.moveLeft(currentFrameTime);
-//     } else if (keysDown[39] && player.canMoveRight()) {
-//       player.moveRight(currentFrameTime);
-//     }
-//   }
-
-//   for (var y = 0; y < mapH; ++y) {
-//     for (var x = 0; x < mapW; ++x) {
-//       ctx.fillStyle = tileTypes[gameMap[toIndex(x, y)]].colour;
-
-//       ctx.fillRect(x * tileW, y * tileH, tileW, tileH);
-//     }
-//   }
-
-//   ctx.fillStyle = '#000';
-//   ctx.fillRect(
-//     player.position[0],
-//     player.position[1],
-//     player.dimensions[0],
-//     player.dimensions[1]
-//   );
-
-//   ctx.fillStyle = '#ff0000';
-//   ctx.fillText('FPS: ' + framesLastSecond, 10, 20);
-
-//   lastFrameTime = currentFrameTime;
-//   requestAnimationFrame(drawGame);
-// }
 var ctx = null;
 var gameMap = [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 1, 2, 0, 0, 2, 0, 0, 0, 0,
@@ -234,14 +16,56 @@ var currentSecond = 0,
   framesLastSecond = 0,
   lastFrameTime = 0;
 
+const modal = document.querySelector('.modal');
+const overlay = document.querySelector('.overlay');
+const modalButton1 = document.querySelector('.close-modal--1');
+const modalButton2 = document.querySelector('.close-modal--2');
+const modalButton3 = document.querySelector('.close-modal--3');
+const modalButton4 = document.querySelector('.close-modal--4');
+let time = 120;
+
+//question logic
+const answerQuestion = function () {
+  modalButton1.addEventListener('click', function () {
+    time -= 10;
+    console.log(time);
+    return false;
+  });
+  modalButton2.addEventListener('click', function () {
+    time += 10;
+    gameMap[toIndex(9, 1)] = gameMap[toIndex(9, 1)] == 0 ? 2 : 0;
+    console.log(time);
+    modal.classList.toggle('hidden');
+    overlay.classList.toggle('hidden');
+    return true;
+  });
+  modalButton3.addEventListener('click', function () {
+    time -= 10;
+    console.log(time);
+    return false;
+  });
+  modalButton4.addEventListener('click', function () {
+    time -= 10;
+    console.log(time);
+    return false;
+  });
+};
+
+function roadBlock1() {
+  gameMap[toIndex(7, 1)] = gameMap[toIndex(8, 1)] == 2 ? 0 : 0;
+}
+
 var tileEvents = {
   17: drawBridge1,
+  18: roadBlock1,
   48: drawBridge2,
   88: drawBridge3,
 };
 function drawBridge1() {
-  console.log('Hello');
-  gameMap[toIndex(9, 1)] = gameMap[toIndex(9, 1)] == 0 ? 2 : 0;
+  modal.classList.toggle('hidden');
+  overlay.classList.toggle('hidden');
+  answerQuestion();
+  delete tileEvents[17];
 }
 function drawBridge2() {
   console.log('Hello');
@@ -282,10 +106,6 @@ var tileTypes = {
   2: {
     colour: '#e06817',
     floor: floorTypes.path,
-  },
-  3: {
-    colour: '#286625',
-    floor: floorTypes.solid,
   },
 };
 
