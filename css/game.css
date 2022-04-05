@@ -1,11 +1,21 @@
+@font-face {
+  font-family: PressStart2P;
+  src: url(font/PressStart2P-Regular.ttf);
+}
 * {
   padding: 0;
   margin: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-size: 62.5%;
   box-sizing: border-box;
 }
 
 body {
   background-color: #e06817;
+  font-family: PressStart2P;
 }
 .map {
   position: absolute;
@@ -60,7 +70,7 @@ body {
   width:30%;
   top: 20%;
   right: 10%;
-  font-size: 2rem;
+  font-size: 3rem;
   background-color: white;
   cursor: pointer;
   
@@ -72,7 +82,7 @@ body {
   width: 30%;
   top: 40%;
   right: 10%;
-  font-size: 2rem;
+  font-size: 3rem;
   background-color: white;
   cursor: pointer;
 
@@ -84,7 +94,7 @@ body {
   width: 30%;
   top: 60%;
   right: 10%;
-  font-size: 2rem;
+  font-size: 3rem;
   background-color: white;
   cursor: pointer;
 
@@ -96,7 +106,7 @@ body {
   width: 30%;
   top: 80%;
   right: 10%;
-  font-size: 2rem;
+  font-size: 3rem;
   background-color: white;
   cursor: pointer;
 
@@ -105,14 +115,55 @@ body {
 
 .header__time{
   
-  width:20rem;
+  width:38rem;
   margin-left:auto;
   margin-right:30rem;
-  margin-top:5rem;
+  margin-top:12rem;
 }
 
-footer {
-  background-color: #e9a505;
-  height: 5vh;
+.header__message{
+  margin-bottom: 2rem;
+}
+p{
+  font-size: 1.6rem;
+}
+
+.message__text{
+font-size: 3rem;
+}
+
+.continue{
+  position: absolute;
+  top:85%;
+  margin-left:10rem;
+  width:50rem;
+  height:20rem;
   text-align: center;
+}
+.btn{
+  border: none;
+  background-color: #e9a505;
+  color: #222;
+  font-size: 2rem;
+  font-family: inherit;
+  padding: 2rem 3rem;
+  cursor: pointer;
+}
+.header__scoreboard{
+  margin-top: -10rem;
+  margin-left: 10rem;
+  font-size: 1.2rem;
+  text-align: center;
+  color:#2f2f2f;
+  width:50rem;
+  height:20rem;
+}
+.again{
+  margin-top: 1rem;
+}
+
+.message{
+  position: absolute;
+  top:50%;
+  left:20%;
 }

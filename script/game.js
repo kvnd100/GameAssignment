@@ -17,6 +17,8 @@ var currentSecond = 0,
   lastFrameTime = 0;
 
 const overlay = document.querySelector('.overlay');
+const message = document.querySelector('.message__text');
+const messageTime = document.querySelector('.header__message');
 const modal = document.querySelector('.modal');
 const modalButton1 = document.querySelector('.close-modal--1');
 const modalButton2 = document.querySelector('.close-modal--2');
@@ -27,6 +29,7 @@ const labelTime = document.querySelector('.header__timer');
 const labelScore = document.querySelector('.header__score');
 const labelHighscore = document.querySelector('.header__highscore');
 const btnAgain = document.querySelector('.again');
+let currentSpeed = 1;
 let timer,
   highscore = 0;
 let count = 0;
@@ -42,11 +45,11 @@ const answerQuestion = function () {
   modalButton2.addEventListener('click', function (e) {
     e.stopImmediatePropagation();
     time += 30;
-    e.stopImmediatePropagation();
     console.log(time);
-    gameMap[toIndex(9, 1)] = gameMap[toIndex(9, 1)] == 0 ? 2 : 0;
+    console.log(modalButton2.value);
     modal.classList.toggle('hidden');
     overlay.classList.toggle('hidden');
+    correctBlock();
     return true;
   });
   modalButton3.addEventListener('click', function (e) {
@@ -64,19 +67,34 @@ const answerQuestion = function () {
 };
 
 //block
-const roadBlock1 = function () {
+const mainBlock = function () {
+  gameMap[toIndex(6, 1)] = gameMap[toIndex(6, 1)] === 2 ? 0 : 2;
+
+  gameMap[toIndex(8, 3)] = gameMap[toIndex(8, 3)] === 2 ? 0 : 2;
+  gameMap[toIndex(8, 5)] = gameMap[toIndex(8, 5)] === 2 ? 0 : 2;
+
+  gameMap[toIndex(7, 8)] = gameMap[toIndex(7, 8)] === 2 ? 0 : 2;
+};
+const correctBlock = function () {
+  gameMap[toIndex(9, 8)] = gameMap[toIndex(9, 8)] === 0 ? 2 : 0;
+  gameMap[toIndex(9, 1)] = gameMap[toIndex(9, 1)] === 0 ? 2 : 0;
+  gameMap[toIndex(9, 4)] = gameMap[toIndex(9, 4)] === 0 ? 2 : 0;
+};
+const roadBlock = function () {
   gameMap[toIndex(7, 1)] = gameMap[toIndex(8, 1)] == 2 ? 0 : 0;
 };
 //win
-const win1 = function () {
+const gameWin = function () {
   clearInterval(timer);
   const score = time * 10;
   if (score > highscore) {
     labelHighscore.textContent = score;
     highscore = score;
   }
-
+  message.textContent = 'You win! 🎉';
+  messageTime.textContent = 'Well Played 👏';
   labelScore.textContent = score;
+  currentSpeed = 0;
 };
 
 //play again
@@ -88,6 +106,8 @@ btnAgain.addEventListener('click', function () {
   labelScore.textContent = '0';
   labelTime.textContent = '01:00';
   modalTime.textContent = '01:00';
+  message.textContent = 'Good Luck! 🤞';
+  messageTime.textContent = 'Time is running out! ⏳';
   //reset player position
   player.position = [5, 165];
   player.tileTo = [0, 4];
@@ -97,7 +117,9 @@ btnAgain.addEventListener('click', function () {
   time = 60;
   //reset map
   gameMap[toIndex(7, 1)] = 1;
-  gameMap[toIndex(9, 1)] = 0;
+  mainBlock();
+  correctBlock();
+  currentSpeed = 1;
   // tileEvents[17] = drawBridge1;
 });
 
@@ -114,8 +136,14 @@ const startTimer = function () {
     // When 0 seconds stop timer
     if (time <= 0) {
       clearInterval(timer);
-
-      console.log('Game over', time);
+      message.textContent = 'You Lose! 😢';
+      if (!modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        overlay.classList.add('hidden');
+      }
+      labelTime.textContent = '00:00';
+      messageTime.textContent = 'Ran out of time 🎃';
+      currentSpeed = 0;
     }
 
     // Decrease 1s
@@ -130,45 +158,64 @@ const startTimer = function () {
 };
 
 var tileEvents = {
-  17: drawBridge1,
-  18: roadBlock1,
-  19: win1,
-  48: drawBridge2,
-  88: drawBridge3,
+  17: question1,
+  18: roadBlock,
+  19: gameWin,
+  48: question2,
+  49: gameWin,
+  88: question3,
+  89: gameWin,
 };
-function drawBridge1() {
+function question1() {
   modal.classList.toggle('hidden');
   overlay.classList.toggle('hidden');
+  //road block
+  // gameMap[toIndex(6, 1)] = 0;
+  // gameMap[toIndex(9, 1)] = 2;
+  mainBlock();
   answerQuestion();
 
   // delete tileEvents[17];
 }
-function drawBridge2() {
-  console.log('Hello');
-  gameMap[toIndex(9, 4)] = gameMap[toIndex(9, 1)] == 0 ? 2 : 0;
+function question2() {
+  modal.classList.toggle('hidden');
+  overlay.classList.toggle('hidden');
+  // gameMap[toIndex(6, 1)] = 0;
+  answerQuestion();
+
+  //road blocks
+  // gameMap[toIndex(9, 4)] = 2;
+  // gameMap[toIndex(8, 3)] = 0;
+  // gameMap[toIndex(8, 5)] = 0;
+  mainBlock();
 }
-function drawBridge3() {
-  console.log('Hello');
-  gameMap[toIndex(9, 8)] = gameMap[toIndex(9, 1)] == 0 ? 2 : 0;
+function question3() {
+  modal.classList.toggle('hidden');
+  overlay.classList.toggle('hidden');
+  answerQuestion();
+
+  //road block
+  // gameMap[toIndex(9, 8)] = 2;
+  // gameMap[toIndex(7, 8)] = 0;
+  mainBlock();
 }
 
 // var tileset = null,
 //   tilesetURL = 'tileset.png',
 //   tilesetLoaded = false;
 
-var gameTime = 0;
-var gameSpeeds = [
-  { name: 'Normal', mult: 1 },
-  { name: 'Slow', mult: 0.3 },
-  { name: 'Fast', mult: 3 },
-  { name: 'Paused', mult: 0 },
-];
-var currentSpeed = 0;
+// var gameTime = 0;
+// const gameSpeeds = [
+//   { name: 'Normal', mult: 1 },
+//   { name: 'Slow', mult: 0.3 },
+//   { name: 'Fast', mult: 3 },
+//   { name: 'Paused', mult: 0 },
+// ];
 
 var floorTypes = {
   solid: 0,
-  path: 1,
-  water: 2,
+  grass: 1,
+  path: 2,
 };
 var tileTypes = {
   0: {
@@ -241,12 +288,12 @@ function Character() {
 
   this.delayMove = {};
   this.delayMove[floorTypes.path] = 400;
-  this.delayMove[floorTypes.grass] = 800;
-  this.delayMove[floorTypes.ice] = 300;
-  this.delayMove[floorTypes.conveyorU] = 200;
-  this.delayMove[floorTypes.conveyorD] = 200;
-  this.delayMove[floorTypes.conveyorL] = 200;
-  this.delayMove[floorTypes.conveyorR] = 200;
+  this.delayMove[floorTypes.grass] = 100;
+  // this.delayMove[floorTypes.ice] = 300;
+  // this.delayMove[floorTypes.conveyorU] = 200;
+  // this.delayMove[floorTypes.conveyorD] = 200;
+  // this.delayMove[floorTypes.conveyorL] = 200;
+  // this.delayMove[floorTypes.conveyorR] = 200;
 
   this.direction = directions.up;
   this.sprites = {};
@@ -439,15 +486,6 @@ window.onload = function () {
     document.getElementById('game').width,
     document.getElementById('game').height,
   ];
-
-  // tileset = new Image();
-  // tileset.onerror = function () {
-  //   ctx = null;
-  //   alert('Failed loading tileset.');
-  // };
-  // tileset.onload = function () {
-  //   tilesetLoaded = true;
-  // };
 };
 
 function drawGame() {
@@ -467,7 +505,7 @@ function drawGame() {
     frameCount++;
   }
 
-  if (!player.processMovement(currentFrameTime)) {
+  if (!player.processMovement(currentFrameTime) && currentSpeed != 0) {
     if (keysDown[38] && player.canMoveUp()) {
       player.moveUp(currentFrameTime);
     } else if (keysDown[40] && player.canMoveDown()) {
