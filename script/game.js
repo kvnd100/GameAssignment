@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 
 var ctx = null;
 var gameMap = [
@@ -16,48 +16,123 @@ var currentSecond = 0,
   framesLastSecond = 0,
   lastFrameTime = 0;
 
-const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
+const modal = document.querySelector('.modal');
 const modalButton1 = document.querySelector('.close-modal--1');
 const modalButton2 = document.querySelector('.close-modal--2');
 const modalButton3 = document.querySelector('.close-modal--3');
 const modalButton4 = document.querySelector('.close-modal--4');
-let time = 120;
-
+const modalTime = document.querySelector('.modal__timer');
+const labelTime = document.querySelector('.header__timer');
+const labelScore = document.querySelector('.header__score');
+const labelHighscore = document.querySelector('.header__highscore');
+const btnAgain = document.querySelector('.again');
+let timer,
+  highscore = 0;
+let count = 0;
+let time = 60;
 //question logic
 const answerQuestion = function () {
-  modalButton1.addEventListener('click', function () {
-    time -= 10;
+  modalButton1.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time -= 30;
     console.log(time);
     return false;
   });
-  modalButton2.addEventListener('click', function () {
-    time += 10;
-    gameMap[toIndex(9, 1)] = gameMap[toIndex(9, 1)] == 0 ? 2 : 0;
+  modalButton2.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time += 30;
+    e.stopImmediatePropagation();
     console.log(time);
+    gameMap[toIndex(9, 1)] = gameMap[toIndex(9, 1)] == 0 ? 2 : 0;
     modal.classList.toggle('hidden');
     overlay.classList.toggle('hidden');
     return true;
   });
-  modalButton3.addEventListener('click', function () {
-    time -= 10;
+  modalButton3.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time -= 30;
     console.log(time);
     return false;
   });
-  modalButton4.addEventListener('click', function () {
-    time -= 10;
+  modalButton4.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time -= 30;
     console.log(time);
     return false;
   });
 };
 
-function roadBlock1() {
+//block
+const roadBlock1 = function () {
   gameMap[toIndex(7, 1)] = gameMap[toIndex(8, 1)] == 2 ? 0 : 0;
-}
+};
+//win
+const win1 = function () {
+  clearInterval(timer);
+  const score = time * 10;
+  if (score > highscore) {
+    labelHighscore.textContent = score;
+    highscore = score;
+  }
+
+  labelScore.textContent = score;
+};
+
+//play again
+
+btnAgain.addEventListener('click', function () {
+  //clear countdown
+  if (timer) clearInterval(timer);
+  //reset score
+  labelScore.textContent = '0';
+  labelTime.textContent = '01:00';
+  modalTime.textContent = '01:00';
+  //reset player position
+  player.position = [5, 165];
+  player.tileTo = [0, 4];
+  player.tileFrom = [0, 4];
+  //reset time
+  timer = undefined;
+  time = 60;
+  //reset map
+  gameMap[toIndex(7, 1)] = 1;
+  gameMap[toIndex(9, 1)] = 0;
+  // tileEvents[17] = drawBridge1;
+});
+
+//timer function
+
+const startTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+
+    // display time in UI
+    labelTime.textContent = `${min}:${sec}`;
+    modalTime.textContent = `${min}:${sec}`;
+    // When 0 seconds stop timer
+    if (time <= 0) {
+      clearInterval(timer);
+
+      console.log('Game over', time);
+    }
+
+    // Decrease 1s
+    time--;
+  };
+
+  // Call the timer every second
+  tick();
+  const timer = setInterval(tick, 1000);
+
+  return timer;
+};
 
 var tileEvents = {
   17: drawBridge1,
   18: roadBlock1,
+  19: win1,
   48: drawBridge2,
   88: drawBridge3,
 };
@@ -65,7 +140,8 @@ function drawBridge1() {
   modal.classList.toggle('hidden');
   overlay.classList.toggle('hidden');
   answerQuestion();
-  delete tileEvents[17];
+
+  // delete tileEvents[17];
 }
 function drawBridge2() {
   console.log('Hello');
@@ -156,8 +232,6 @@ var viewport = {
   },
 };
 
-var player = new Character();
-
 function Character() {
   this.tileFrom = [0, 4];
   this.tileTo = [0, 4];
@@ -181,6 +255,7 @@ function Character() {
   this.sprites[directions.down] = [{ x: 0, y: 180, w: 30, h: 30 }];
   this.sprites[directions.left] = [{ x: 0, y: 210, w: 30, h: 30 }];
 }
+var player = new Character();
 Character.prototype.placeAt = function (x, y) {
   this.tileFrom = [x, y];
   this.tileTo = [x, y];
@@ -343,6 +418,11 @@ window.onload = function () {
   window.addEventListener('keydown', function (e) {
     if (e.keyCode >= 37 && e.keyCode <= 40) {
       keysDown[e.keyCode] = true;
+      //Start Timer
+
+      if (!timer) {
+        timer = startTimer();
+      }
     }
   });
   window.addEventListener('keyup', function (e) {
@@ -360,14 +440,14 @@ window.onload = function () {
     document.getElementById('game').height,
   ];
 
-  tileset = new Image();
-  tileset.onerror = function () {
-    ctx = null;
-    alert('Failed loading tileset.');
-  };
-  tileset.onload = function () {
-    tilesetLoaded = true;
-  };
+  // tileset = new Image();
+  // tileset.onerror = function () {
+  //   ctx = null;
+  //   alert('Failed loading tileset.');
+  // };
+  // tileset.onload = function () {
+  //   tilesetLoaded = true;
+  // };
 };
 
 function drawGame() {

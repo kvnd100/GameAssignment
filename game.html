@@ -10,14 +10,22 @@
 </head>
 <body>
     <header class="header">
-        <h2>Time: <span class="header__timer">2:00</span></h2>
+        <div class="header__time">
+            <p>Time is running out ⏳ </p>
+        <h2 class="header__h2">Time 👉 <span class="header__timer">01:00</span></h2>
+        </div>
+        <div class="header__scoreboard">
+            <h2 class="header__h2">Score 💯: <span class="header__score">0</span></h2>
+            <h2 class="header__h2">Highscore 🥇: <span class="header__highscore">0</span></h2>
+        </div>
     </header>
 
     
     <div class="map"><canvas id="game" width="400" height="400"></canvas></div>
     <div id="test" class="modal hidden">
+        <h2 class="modal__h2">Time 👉 <span class="modal__timer">01:00</span></h2>
         <div class="modal__box">
-
+            
             <img src="/images/question1.png" alt="Questions" class="modal__img">
             
             <button class="close-modal--1">110</button>
@@ -27,6 +35,7 @@
         </div>
     </div>
     <div class="overlay hidden"></div>
-
+    <button class="again">Play again !</button>
+    
 </body>
 </html>
