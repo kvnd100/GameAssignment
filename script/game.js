@@ -28,25 +28,60 @@ const modalTime = document.querySelector('.modal__timer');
 const labelTime = document.querySelector('.header__timer');
 const labelScore = document.querySelector('.header__score');
 const labelHighscore = document.querySelector('.header__highscore');
+const image = document.querySelector('.modal__img');
 const btnAgain = document.querySelector('.again');
 let currentSpeed = 1;
 let timer,
   highscore = 0;
-let count = 0;
+
+let randomNum;
 let time = 60;
+
+//shuffle question
+
+const shuffleQuestion = function () {
+  //create a random number to swap images
+  const random = Math.trunc(Math.random() * 3 + 1);
+  //change img
+  image.src = `/images/question${random}.png`;
+  //updating button text
+  switch (random) {
+    case 1:
+      modalButton1.textContent = '110';
+      modalButton2.textContent = '101';
+      modalButton3.textContent = '100';
+      modalButton4.textContent = '111';
+      break;
+    case 2:
+      modalButton1.textContent = '11';
+      modalButton2.textContent = '55';
+      modalButton3.textContent = '56';
+      modalButton4.textContent = '44';
+      break;
+    case 3:
+      modalButton1.textContent = '1';
+      modalButton2.textContent = '2';
+      modalButton3.textContent = '3';
+      modalButton4.textContent = '4';
+      break;
+  }
+  return random;
+};
+//invoking random image on refresh
+randomNum = shuffleQuestion();
+
 //question logic
+
+//1
 const answerQuestion = function () {
   modalButton1.addEventListener('click', function (e) {
     e.stopImmediatePropagation();
     time -= 30;
-    console.log(time);
     return false;
   });
   modalButton2.addEventListener('click', function (e) {
     e.stopImmediatePropagation();
     time += 30;
-    console.log(time);
-    console.log(modalButton2.value);
     modal.classList.toggle('hidden');
     overlay.classList.toggle('hidden');
     correctBlock();
@@ -55,13 +90,43 @@ const answerQuestion = function () {
   modalButton3.addEventListener('click', function (e) {
     e.stopImmediatePropagation();
     time -= 30;
-    console.log(time);
+
     return false;
   });
   modalButton4.addEventListener('click', function (e) {
     e.stopImmediatePropagation();
     time -= 30;
-    console.log(time);
+
+    return false;
+  });
+};
+
+//2
+
+const answerQuestion2 = function () {
+  modalButton1.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time -= 30;
+    return false;
+  });
+  modalButton2.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time += 30;
+    modal.classList.toggle('hidden');
+    overlay.classList.toggle('hidden');
+    correctBlock();
+    return true;
+  });
+  modalButton3.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time -= 30;
+
+    return false;
+  });
+  modalButton4.addEventListener('click', function (e) {
+    e.stopImmediatePropagation();
+    time -= 30;
+
     return false;
   });
 };
@@ -120,7 +185,10 @@ btnAgain.addEventListener('click', function () {
   mainBlock();
   correctBlock();
   currentSpeed = 1;
-  // tileEvents[17] = drawBridge1;
+  //invoking random image on reset
+  randomNum = shuffleQuestion();
+
+  // delete tileEvents[17] = drawBridge1;
 });
 
 //timer function

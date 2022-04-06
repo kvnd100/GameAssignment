@@ -16,6 +16,8 @@ html {
 body {
   background-color: #e06817;
   font-family: PressStart2P;
+  overflow: hidden;
+  
 }
 .map {
   position: absolute;
